@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <title>Especificar</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+  <!-- SLIDER -->
+  <link rel="stylesheet" href="https://sachinchoolur.github.io/lightslider/src/css/lightslider.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.2.19/css/lightgallery.min.css" />
+
+</head>
+
+<body>
+
+    <?php
+    $idterminator = $_GET['id']; //Encapsulndo el id en una variable (URL)
+    if(empty($idterminator)):   //Comprobamos si existe un id en la URL y si no existe mandamos "NO"
+    ?>
+
+        <p>Consultar con webmaster</p>
+
+    <?php else: ?>
+
+        
+        <script type="text/javascript">
+            function $(id){
+            return document.querySelector(id);
+            }
+
+            function especificar(){
+                const parametros = new FormData();
+                parametros.append("operacion", "especificarProducto");
+                parametros.append("idproducto", '<?php echo $idterminator; ?>');
+                //parametros.append("idproducto", $("#lista-especificaciones").value);
+                //parametros.append("idproducto", '2');
+
+                fetch(`../../controllers/producto.controller.php`,{
+                    method: "POST",
+                    body: parametros
+                })
+                .then(respuesta => respuesta.json())
+                .then(datos => {
+                    //const nuevoItem = $("#lista-especificaciones");
+                    //nuevoItem.innerHTML = ""; // Limpia la tabla antes de agregar nuevos datos
+
+                    if (datos.length === 0){
+                        $("#lista-especificaciones").innerHTML = `<p>Pronto tendremos más novedades</p>`;
+                    } else {
+                    $("#lista-especificaciones").innerHTML = ``;
+                    datos.forEach(element => {
+                        const nuevoItem = `
+
+
+                        <tbody>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-sm">
+                        <tr>
+                            <td class="text-nowrap"><strong>${element.clave}</strong></td>
+                            <td>${element.valor}</td>
+                            <td><a href="../../images/${element.rutafoto}" target="_blank">@@</a></td>
+                        </tr>
+                        </table
+                        </div>
+                        </tbody>
+                        `;
+                        $("#lista-especificaciones").innerHTML += nuevoItem;
+                    });
+                    }
+                })
+                .catch(e => {
+                    console.error(e)
+                });
+            }
+
+            
+
+
+        
+            // Llama a la función especificar después de cargar la página
+            
+            especificar();
+        </script>
+
+
+
+    <div class="container">
+        <div class="card mt-3">
+            <div class="card-body">
+                <h5 class="card-title" >Características</h5>
+                <div class="table-responsive">
+                    <table class="table table-striped table-sm" id="lista-especificaciones">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div> 
+
+
+
+
+
+
+
+
+    <div class="demo">
+        <ul id="imageGallery" class="gallery list-unstyled">
+            <li data-thumb="http://sachinchoolur.github.io/lightslider/img/cS-1.jpg" data-src="http://sachinchoolur.github.io/lightslider/img/cS-1.jpg"> 
+                <img src="http://sachinchoolur.github.io/lightslider/img/cS-1.jpg" />
+                </li>
+            <li data-thumb="http://sachinchoolur.github.io/lightslider/img/cS-2.jpg" data-src="http://sachinchoolur.github.io/lightslider/img/cS-2.jpg"> 
+                <img src="http://sachinchoolur.github.io/lightslider/img/cS-2.jpg" />
+                </li>
+        </ul>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Bootstrap JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+    </script>
+
+    <!-- SLIDER -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> 
+    <script src="https://sachinchoolur.github.io/lightslider/src/js/lightslider.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightgallery/1.2.19/js/lightgallery-all.min.js"></script> 
+
+    <script type="text/javascript"> // PARA QUE RECONOZCA EL JAVASCRIPT (text/javascript)
+        $(document).ready(function() {
+            $('#imageGallery').lightSlider({
+                gallery:true,
+                item:1,
+                loop:true,
+                thumbItem:9,
+                slideMargin:0,
+                enableDrag: false,
+                currentPagerPosition:'left',
+                onSliderLoad: function(el) {
+                    el.lightGallery({
+                        selector: '#imageGallery .lslide'
+                    });
+                }   
+            });
+        });
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <?php endif; ?>
+  
+    
+
+
+</body>
+</html>
