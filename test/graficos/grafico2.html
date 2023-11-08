@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHARTJS</title>
+</head>
+<body>
+  <!-- threejs -->
+  <!-- Canvas = Lienzo -->
+  <div style="width: 50%">
+    <canvas id="migrafico"></canvas>
+  </div>
+
+  <div>
+    <input type="number" min="0" max="100"  placeholder="PHP" id="php">
+    <input type="number" min="0" max="100"  placeholder="Java" id="java">
+    <input type="number" min="0" max="100"  placeholder="Typescript" id="typescript">
+    <input type="number" min="0" max="100"  placeholder="Python" id="python">
+    <input type="number" min="0" max="100"  placeholder="C#" id="csharp">
+    <button type="button" id="mostrar">Mostrar datos</button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+
+    function $(id = ``){
+      return document.querySelector(id)
+    }
+
+
+    // REFERENCIA
+    const contexto = document.querySelector("#migrafico");
+
+    // Enn el constructor passamos el contexto
+    const grafico = new Chart(contexto, {
+      type: 'line',
+      data: {
+        labels: ["PHP", "Java", "Typescript", "Python", "C#"],
+        datasets: [{
+          label: "2022",
+          data: [40, 60, 15, 55, 25]
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+      
+    });
+
+    $("#mostrar").addEventListener("click", () => {
+
+      //Actualizar un valor
+      //grafico.data.datasets[0].data[0] = 80;
+      //console.log(grafico.data.datasets[0].data[0]);
+
+      //Actualiza un conjunto de valores
+      //const nuevosValores = [10,15,20,25,30];
+      //grafico.data.datasets[0].data = nuevosValores;
+
+      //Actualizar desde una fuente externa (INPUTS)
+      const datosFormulario = [
+        parseInt($("#php").value),
+        parseInt($("#java").value),
+        parseInt($("#typescript").value),
+        parseInt($("#python").value),
+        parseInt($("#csharp").value)
+      ];
+
+      grafico.data.datasets[0].data = datosFormulario;
+      grafico.update();
+    });
+
+
+  </script>
+</body>
+</html>

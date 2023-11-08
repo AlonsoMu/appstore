@@ -1,7 +1,7 @@
 USE appstore;
 
 DELIMITER $$
-CREATE PROCEDURE spu_productos_listar()
+CREATE procedure spu_productos_listar()
 BEGIN 
 	SELECT pro.idproducto, 
 	cat.categoria, 
@@ -226,16 +226,7 @@ CREATE VIEW vs_producto_info
         LEFT JOIN galerias GAL ON PRO.idproducto = GAL.idproducto
 		WHERE ESP.inactive_at IS NULL;*/
         
-DELIMITER $$
-DROP PROCEDURE spu_productos_especificar
-(
-	IN _idproducto INT
-)
-BEGIN
-    SELECT *
-    FROM vs_especificaciones_listar
-    WHERE idproducto = _idproducto;
-END $$
+
 
 CALL spu_productos_especificar(1);
 
@@ -382,7 +373,7 @@ END //
 DELIMITER ;
 
 DELIMITER $$
-DROP PROCEDURE spu_usuario_actualizarclave
+CREATE PROCEDURE spu_usuario_actualizarclave
 (
 	IN _idusuario INT,
 	IN _claveacceso VARCHAR(100)
@@ -490,8 +481,8 @@ CALL spu_productos_buscar(1);
 
 DELETE FROM especificaciones;
 ALTER TABLE especificaciones AUTO_INCREMENT 1;
-DELETE FROM desbloqueos;
-ALTER TABLE desbloqueos AUTO_INCREMENT 1;
+DELETE FROM galerias;
+ALTER TABLE galerias AUTO_INCREMENT 1;
 
 DELETE FROM usuarios;
 ALTER TABLE usuarios AUTO_INCREMENT 1;

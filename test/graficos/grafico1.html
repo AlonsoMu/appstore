@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHARTJS</title>
+</head>
+<body>
+  <!-- threejs -->
+  <!-- Canvas = Lienzo -->
+  <div style="width: 50%">
+    <canvas id="migrafico"></canvas>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const contexto = document.getElementById("migrafico");
+
+    // El constructor lleva una referencia a canvas y luego llega todo los parametros
+    const grafico = new Chart(contexto, {
+      type: 'bar',
+      data: {
+        labels: ["HP", "Acer", "Lenovo", "DELL"],
+        // OBJETO
+        datasets:[{
+          label: 'Marca',
+          data: [25, 60, 90, 40],
+          borderWidth: 2,
+        }, {
+          label: "Febrero",
+          data: [15, 20, 40, 60],
+          borderWidth: 2
+        }], 
+      },
+    });
+  </script>
+</body>
+</html>

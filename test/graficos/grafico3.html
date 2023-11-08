@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHARTJS</title>
+</head>
+<body>
+  <!-- threejs -->
+  <!-- Canvas = Lienzo -->
+  <div style="width: 50%">
+    <canvas id="migrafico"></canvas>
+  </div>
+
+ 
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+
+  <script>
+
+    //Contiene la informacion para graficos
+    const ventas = [
+      {ciudad: "Ica", valor: 45},
+      {ciudad: "Lima", valor: 65},
+      {ciudad: "Ayacucho", valor: 30},
+      {ciudad: "Tacna", valor: 60},
+    ];
+
+    //Si nuestro arreglo posee más colores  de los que necesita el gráfico, estos se ignoran
+    //si por el contrario tiene menos, se repetiran, si tiene uno, será el que se asigne
+    //para todos
+    const coloresBorder = [
+        "rgba(224, 255, 51, 1)",
+        "rgba(51, 255, 168, 1)" ,
+        "rgba(51, 212, 255, 1)" ,
+        "rgba(255, 73, 51,1)"
+    ];
+
+    const coloresFondo = [
+        "rgba(224, 255, 51, 0.3)",
+        "rgba(51, 255, 168, 0.3)" ,
+        "rgba(51, 212, 255, 0.3)" ,
+        "rgba(255, 73, 51, 0.3)"
+    ];
+    const contexto = document.querySelector("#migrafico");
+    const grafico = new Chart(contexto,{
+      type: 'bar',
+      data: {
+        labels: ventas.map(fila => fila.ciudad),
+        datasets: [{
+          label: "Ventas por ciudad",
+          data: ventas.map(fila => fila.valor),
+          borderColor: coloresBorder,
+          backgroundColor: coloresFondo,
+          borderWidth: 2
+
+        }]
+      }
+    });
+
+
+
+  </script>
+</body>
+</html>
