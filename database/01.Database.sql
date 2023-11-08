@@ -62,12 +62,11 @@ CREATE TABLE usuarios(
     CONSTRAINT uk_email_usu			UNIQUE(email)
 )ENGINE = INNODB;
 
-INSERT INTO usuarios (idrol, idnacionalidad, apellidos, nombres, email, claveacceso, telefono) values
-(1, 1, 'Muñoz', 'Nohelia', 'Noheliavasquez821gmail.com','122345', '970526015'),
-(1, 2, 'Muñoz', 'Fernanda', 'alonsorecik@gmail.com','123245', '956418436');
+INSERT INTO usuarios (idrol, idnacionalidad, avatar, apellidos, nombres, email, claveacceso, telefono, clavegenerada) values
+(1, 1, '', 'Hernandez Yerén', 'Yorghet', 'yorghetyauri123@gmail.com', '123456','946989937','123456'),
+(1, 50, '', 'Muñoz Quispe', 'Alonso', 'alonsomunoz263@gmail.com','123456','970526015','123457');
 
-INSERT INTO usuarios (idrol, idnacionalidad, apellidos, nombres, claveacceso, telefono) values
-(1, 2, 'Muñoz', 'Fernando', '123245', '956418436');
+
 
 CREATE TABLE especificaciones (
 	idespecif		INT				PRIMARY KEY AUTO_INCREMENT,

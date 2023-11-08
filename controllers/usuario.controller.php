@@ -46,73 +46,114 @@ if (isset($_POST['operacion'])){
       echo $usuario->eliminar($datosEnviar);
       break;
 
-    case 'registrarDesbloqueo':
-      $datosEnviar=[
-          "idusuario" => $_POST['idusuario'],
-          "clavegenerada" => $_POST['clavegenerada']
-      ];
-
-      echo json_encode($usuario->registrarDesbloqueo($datosEnviar));
-
-      break;
+    
 
 
-    case 'validarClave':
+    case 'buscarUsuario':
 
-      $datosEnviar=[
-          "campocriterio" => $_POST['campocriterio']
-      ];
+      $datosEnviar = $usuario->buscarUsuario
+      (
+        ['email' => $_POST['email']]
+      );
 
-      $statusForm = [
-
-          "status" => false,
-          "mensaje" => ""
-      ];
-
-      $registro = $usuario->validarClave($datosEnviar);
-
-      if(!$registro){
-
-          $statusForm["mensaje"] = "Email o telefono incorrectos";
-      }else{
-          $statusForm["status"] = true;
-          $statusForm["mensaje"] = "Coinciden";
-      }
-
-      $result = [$statusForm,$registro];
-
-      echo json_encode($result);
+    if ($datosEnviar) {
+      echo json_encode($datosEnviar);
+    }
 
       break;
 
-      case 'sendEmail':
-        $valorAleatorio = random_int(100000, 999999);
-        $datosEnviar=[
-          "emailDestino" => $_POST['emailDestino'],
-            "asunto" => "recuperacion de contraseña",
-            "mensaje" => "codigo de recuperacion: " . $valorAleatorio
-        ];
-        
-        enviarCorreo($datosEnviar);
-        break;
+    case 'enviarCorreo':
+      $valorAleatorio = random_int(100000, 999999);
+      $mensaje = "
+      <h1>Recuperación de su cuenta</h1>
+      <hr>
+      <p>Estimado(a), para recuperar el acceso a su cuenta utilice la siguiente contraseña:</p>
+      <h1 style='color:cornflowerblue;font-size:50px;'>{$valorAleatorio}</h1>
+    ";
 
-      case 'sendSMS':
-        $valorAleatorio = random_int(100000, 999999);
-        $datosEnviar=[
-          "telefono" => $_POST['telefono'],
-          "mensaje" => "codigo de recuperacion: " . $valorAleatorio
-        ];
+    $datosEnviar = [
+      'idusuario'     => $_POST['idusuario'],
+      'email'         => $_POST['email'],
+      'clavegenerada' => $valorAleatorio
+    ];
+
+    enviarCorreo($_POST['email'], 'Código de restauración', $mensaje);
+
+    $usuario->registrarDesbloqueo($datosEnviar);
+
+    
+      break;
+
+        /*case 'enviarCorreo':
+          $valorAleatorio = random_int(100000, 999999);
+          $email = $_POST['email'];
+          
+          // Verificar si el correo electrónico existe en la base de datos
+          $usuarioExistente = $usuario->buscarUsuario(['email' => $email]);
+      
+          if ($usuarioExistente) {
+              $mensaje = "
+              <h1>Recuperación de su cuenta</h1>
+              <hr>
+              <p>Estimado(a), para recuperar el acceso a su cuenta utilice la siguiente contraseña:</p>
+              <h1 style='color:cornflowerblue;font-size:50px;'>{$valorAleatorio}</h1>
+              ";
+      
+              $datosEnviar = [
+                  'idusuario'     => $usuarioExistente['idusuario'],
+                  'email'         => $email,
+                  'clavegenerada' => $valorAleatorio
+              ];
+      
+              $usuario->registrarDesbloqueo($datosEnviar);
+      
+              enviarCorreo($email, 'Código de restauración', $mensaje);
+      
+              echo json_encode(['success' => true, 'message' => 'Correo enviado con éxito.']);
+          } else {
+              echo json_encode(['success' => false, 'message' => 'El correo electrónico no existe en la base de datos.']);
+          }
+          break;*/
+      
+      
+      
+
+    case 'sendSms':
+      $valorAleatorio = random_int(100000, 999999);
   
-        enviarSMS($datosEnviar);
-        break;
+      // Mensaje para el SMS
+      $mensajes = "Su código de restauración es: " . $valorAleatorio;
+  
+      $datosEnviar = [
+          'idusuario'     => $_POST['idusuario'],
+          'telefono'      => $_POST['telefono'],
+          'clavegenerada' => $valorAleatorio
+      ];
+  
+      // Llamada a la función para registrar el desbloqueo
+      $usuario->desbloqueoSms($datosEnviar);
+  
+      // Llamada a la función para enviar el SMS
+      enviarSMS($_POST['telefono'], $mensajes);
+      break;
 
-      case 'actualizarClave':
-        $datosEnviar = [
-          "idusuario" => $_POST["idusuario"],
-          "claveacceso" => password_hash($_POST["claveacceso"], PASSWORD_BCRYPT)
-        ];
-        echo json_encode($usuario->actualizarClave($datosEnviar));
-        break;
+    case 'validar':
+      $datos = [
+        'idusuario'         => $_POST['idusuario'],
+        'clavegenerada'     => $_POST['clavegenerada'] //modal
+      ];
+  
+      echo json_encode($usuario->validarClave($datos));
+      break;
+      
+
+    case 'actualizarClave':
+      $datosEnviar = [
+        "idusuario" => $_POST["idusuario"],
+        "claveacceso" => password_hash($_POST["claveacceso"], PASSWORD_BCRYPT)
+      ];
+      echo json_encode($usuario->actualizarClave($datosEnviar));
+      break;
 
       
   }

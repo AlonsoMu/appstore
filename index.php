@@ -45,7 +45,7 @@ if(isset($_SESSION["status"]) && $_SESSION["status"]){
             <input type="password" class="form-control" id="claveacceso" required>
             <div class="d-flex flex-wrap m-0 justify-content-between">
               
-              <a href="views/recuperar.php" style="outline: none;"><small>¿Olvidaste tu contraseña?</small></a>
+              <a href="recuperar.php" style="outline: none;"><small>¿Olvidaste tu contraseña?</small></a>
             </div>
           </div>
           <div>

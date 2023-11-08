@@ -227,7 +227,7 @@ CREATE VIEW vs_producto_info
 		WHERE ESP.inactive_at IS NULL;*/
         
 DELIMITER $$
-CREATE PROCEDURE spu_productos_especificar
+DROP PROCEDURE spu_productos_especificar
 (
 	IN _idproducto INT
 )
@@ -297,18 +297,23 @@ BEGIN
 END $$
 DELIMITER ;
 
+
 DELIMITER $$
-CREATE PROCEDURE spu_desbloqueos_registrar(
-	IN _idusuario 				INT,
-    IN _clavegenerada 			CHAR(6)
+CREATE PROCEDURE spu_clavegenerada_registrar(
+    IN _idusuario                INT,
+    IN _email                    VARCHAR(50),
+    IN _clavegenerada            CHAR(6)
 )
 BEGIN
-	UPDATE usuarios
-    SET
-		clavegenerada = _clavegenerada,
-		estado = '0'
-		WHERE idusuario = _idusuario;
+    UPDATE usuarios
+    SET 
+        clavegenerada =  _clavegenerada,
+        estado = '0'
+    WHERE idusuario = _idusuario;
 END $$
+CALL spu_clavegenerada_registrar(1, 'yorghetyauri123@gmail.com', '280703');
+SELECT * FROM usuarios
+
 
 DELIMITER $$
 CREATE PROCEDURE spu_desbloqueosms_registrar(
@@ -370,15 +375,15 @@ BEGIN
         UPDATE usuarios
         SET estado = '1'
         WHERE idusuario = p_idusuario;
-        SELECT 'VALIDO';
+        SELECT 'VALIDO' AS 'status';
     ELSE
-        SELECT 'DENEGADO';
+        SELECT 'DENEGADO' AS 'status';
     END IF;
 END //
 DELIMITER ;
 
 DELIMITER $$
-CREATE PROCEDURE spu_usuario_actualizarclave
+DROP PROCEDURE spu_usuario_actualizarclave
 (
 	IN _idusuario INT,
 	IN _claveacceso VARCHAR(100)
@@ -424,6 +429,23 @@ begin
 end $$
 delimiter ;
 
+DELIMITER $$
+CREATE PROCEDURE spu_buscar_email(IN _email VARCHAR(100))
+BEGIN
+    SELECT 
+    idusuario,
+    apellidos,
+    nombres,
+    email,
+    telefono,
+    clavegenerada
+    FROM usuarios
+    WHERE email = _email;
+END $$
+
+CALL spu_buscar_email('alonsomunoz263@gmail.com');
+
+
 
 
 CALL spu_clavegenerada_obtener('alonsomunoz263@gmail.com');
@@ -454,8 +476,8 @@ SELECT * FROM usuarios;
 CALL spu_usuarios_listar();
 CALL spu_roles_listar();
 CALL spu_nacionalidades_listar();
-CALL spu_usuarios_registrar(1, 1, '', 'Hernandez Yerén', 'Yorghet', 'alonsoredick@gmail.com', '', '12345');
-CALL spu_usuarios_registrar(1, 50, '', 'Muñoz Quispe', 'Alonso', 'alonsomunoz263@gmail.com', '' ,'12345');
+CALL spu_usuarios_registrar(1, 1, '', 'Hernandez Yerén', 'Yorghet', 'yorghetyauri123@gmail.com', '12345');
+CALL spu_usuarios_registrar(1, 50, '', 'Muñoz Quispe', 'Alonso', 'alonsomunoz263@gmail.com' ,'12345');
 CALL spu_usuarios_registrar(3, 50, '', 'Quispe Napa', 'Harold', 'harito@gmail.com', '12345');
 CALL spu_usuarios_registrar(2, 50, '', 'Villegas', 'Lucas', 'lucas@gmail.com', '12345');
 CALL spu_productos_registrar(1,'ProductoA', 4500, 12, '');

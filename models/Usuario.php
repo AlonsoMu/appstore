@@ -64,10 +64,28 @@ class Usuario extends Conexion{
 
 public function registrarDesbloqueo($datos = []){
   try{
-    $consulta = $this->usuario->prepare("CALL spu_desbloqueos_registrar(?,?)");
+    $consulta = $this->usuario->prepare("CALL spu_clavegenerada_registrar(?,?,?)");
     $consulta->execute(
       array(
         $datos['idusuario'],
+        $datos['email'],
+        $datos['clavegenerada']
+      )
+    );
+    return $consulta->fetch(PDO::FETCH_ASSOC);
+  }
+  catch(Exception $e){
+    die($e->getMessage());
+  }
+}
+
+public function desbloqueoSms($datos = []){
+  try{
+    $consulta = $this->usuario->prepare("CALL spu_desbloqueosms_registrar(?,?,?)");
+    $consulta->execute(
+      array(
+        $datos['idusuario'],
+        $datos['telefono'],
         $datos['clavegenerada']
       )
     );
@@ -80,10 +98,11 @@ public function registrarDesbloqueo($datos = []){
 
 public function validarClave($datos = []){
   try{
-    $consulta = $this->usuario->prepare("CALL spu_clavegenerada_obtener(?)");
+    $consulta = $this->usuario->prepare("CALL spu_usuario_validarclave(?,?)");
     $consulta->execute(
         array(
-            $datos['campocriterio']
+            $datos['idusuario'],
+            $datos['clavegenerada']
         )
     );
 
@@ -109,6 +128,23 @@ public function actualizarClave($datos = []){
     die($e->getMessage());
   }
 }
+
+public function buscarUsuario($datos = []) {
+  try {
+      $consulta = $this->usuario->prepare("CALL spu_buscar_email(?)");
+      $consulta->execute(
+        array(
+        $datos['email'],
+      )
+    );
+      return $consulta->fetch(PDO::FETCH_ASSOC);
+  } catch (Exception $e) {
+      die($e->getMessage());
+  }
+}
+
+
+
 
 
 

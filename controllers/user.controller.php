@@ -3,7 +3,6 @@
 session_start();  //Crear o heredar la sesion
 
 require_once '../models/User.php';
-require_once '../models/Mail.php';
 
 
 if(isset($_POST['operacion'])){
@@ -54,65 +53,6 @@ if(isset($_POST['operacion'])){
 
   }//Fin login
   
-
-  if($_POST['operacion'] == 'enviarCorreo') {
-    // Obtener el email del formulario
-
-    
-    // Validar que el email no esté vacío
-    
-        // Crear un valor aleatorio de 4 dígitos
-        $valorAleatorio = random_int(100000, 999999);
-        
-        $mensaje = "
-          <h3>SENATI</h3>
-          <strong>Recuperación de cuenta</strong>
-          <hr>
-          <p>Estimado {$_POST['emailsecu']}, para recuperar el acceso, utilice la siguiente código:</p>
-          <h3>{$valorAleatorio}</h3>
-        ";
-
-        // Arreglo con datos a guardar en la tabla de recuperación
-        $datos = [
-          'idusuario'         => $_POST['idusuario'],
-          'emailsecu'         => $_POST['emailsecu'],
-          'clavegenerada'     => $valorAleatorio
-        ];
-
-        // Creando registro
-        $usuario->registrarDesbloqueo($datos);
-        
-        // Enviando correo
-        enviarCorreo($_POST['emailsecu'], 'Código de Restauración', $mensaje);
-        //$retornoDatos["mensaje"] = "Se ha generado y enviado la clave al email indicado";
-  
-  } // Fin generar clave
-
-  
-
-  if($_POST['operacion'] == 'validarClave'){
-
-    $datos = [
-      "idusuario"     => $_POST['idusuario'],
-      "clavegenerada" => $_POST['clavegenerada'] //modal
-    ];
-    $resultado = $usuario->validarClave($datos);
-    echo json_encode($resultado);
-  
-  } //Fin validar clave
-
-  if ($_POST['operacion'] == 'actualizarClave'){
-   
-    $claveEncriptada = password_hash($_POST['claveacceso'],PASSWORD_BCRYPT);
-    $idusuario = $_POST['idusuario'];
-    $datos = [
-      "idusuario"     => $idusuario,
-      "claveacceso"   => $claveEncriptada
-    ];
-    echo json_encode($usuario->actualizarClave($datos));
-}
-
- 
 
 
 }

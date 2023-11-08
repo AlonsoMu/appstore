@@ -1,11 +1,11 @@
 <?php
 
-function enviarSMS($datos = []){
+function enviarSMS($numero, $mensajes){
   $token = "MjA0NzIzMDgwNTpEOEM3QkZBRjNFRDA=";
   $autorization = "Authorization: Bearer ".$token;
   $fields_string = "";
-  $smsnumber = $datos['telefono'];
-  $smstext = $datos['mensaje'];
+  $smsnumber = $numero;
+  $smstext = $mensajes;
   $smstype = "1"; // 0: remitente largo, 1: remitente corto
   $shorturl = "0"; // acortador URL
 

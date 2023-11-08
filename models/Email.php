@@ -12,7 +12,7 @@ use PHPMailer\PHPMailer\Exception;
 //Load Composer's autoloader
 require '../vendor/autoload.php';
 
-function enviarCorreo($datos = [])
+function enviarCorreo($destino, $asunto, $mensaje)
 {
   $mail = new PHPMailer(true);
 
@@ -34,12 +34,12 @@ function enviarCorreo($datos = [])
     //Recipients
     $mail->setFrom('alonsomunoz263@gmail.com', 'Proyecto de Prueba');
     // $mail->addAddress('1399488@senati.pe');                     //Destino  //Name is optional
-    $mail->addAddress($datos['emailDestino']);
+    $mail->addAddress($destino);
 
     //Content
     $mail->isHTML(true);                                  //Set email format to HTML
-    $mail->Subject = $datos['asunto'];                             //Asunto
-    $mail->Body    = $datos['mensaje'];                            //Soporta HTML
+    $mail->Subject = $asunto;                             //Asunto
+    $mail->Body    = $mensaje;                         //Soporta HTML
     $mail->AltBody = 'El mensaje requiere soporte HTML';  //No soporta HTML
 
     $mail->send();
