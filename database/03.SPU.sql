@@ -324,13 +324,12 @@ CREATE PROCEDURE spu_desbloqueosms_registrar(
 BEGIN
 	UPDATE usuarios
     SET
-		telefono = _telefono,
 		clavegenerada = _clavegenerada,
 		estado = '0'
 		WHERE idusuario = _idusuario;
 END $$
 
-
+CALL spu_desbloqueosms_registrar(2, '956418436', '123456')
 
 
 /*DELIMITER $$
@@ -440,10 +439,11 @@ BEGIN
     telefono,
     clavegenerada
     FROM usuarios
-    WHERE email = _email;
+    WHERE 
+			email = _email OR telefono = _email;
 END $$
 
-CALL spu_buscar_email('alonsomunoz263@gmail.com');
+CALL spu_buscar_email('970526015');
 
 
 
@@ -472,6 +472,7 @@ SELECT * FROM desbloqueos;
 SELECT * FROM roles;
 SELECT * FROM galerias;
 SELECT * FROM productos;
+use appstore;
 SELECT * FROM usuarios;
 CALL spu_usuarios_listar();
 CALL spu_roles_listar();

@@ -137,6 +137,8 @@ if (isset($_POST['operacion'])){
       enviarSMS($_POST['telefono'], $mensajes);
       break;
 
+
+      
     case 'validar':
       $datos = [
         'idusuario'         => $_POST['idusuario'],

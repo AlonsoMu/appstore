@@ -27,8 +27,8 @@
                 <div class="form-group">
                   <!-- CAMPO EMAIL -->
                   <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="Ingrese su correo electrónico" spellcheck="false" autofocus>
+                    <label for="email" class="form-label">Email / Teléfono</label>
+                    <input type="email" class="form-control" id="email" placeholder="Ingrese su Email / Teléfono" spellcheck="false" autofocus>
                   </div>      
                 </div>  
                 <div class="d-none" id="datos">
@@ -40,13 +40,17 @@
                     <label for="email1">Correo Electrónico:</label>
                     <input type="text" class="form-control" id="email1" readonly>
                   </div>
+                  <div class="form-group">
+                    <label for="telefono1">Télefono:</label>
+                    <input type="text" class="form-control" id="telefono1" readonly>
+                  </div>
                 </div>  
                 <!-- Checkbox para notificaciones -->
-                <div class="form-check">
+                <div class="form-check" id="nadiemeve1">
                   <input type="checkbox" class="form-check-input" id="recibir-email" name="notificacion" value="email">
                   <label class="form-check-label" for="recibir-email">Recibir por Email</label>
                 </div>
-                <div class="form-check">
+                <div class="form-check" id="nadiemeve2">
                   <input type="checkbox" class="form-check-input" id="recibir-sms" name="notificacion" value="sms">
                   <label class="form-check-label" for="recibir-sms">Recibir por SMS</label>
                 </div>
@@ -122,6 +126,11 @@
 
 
     <script>
+      let noveo1 = document.getElementById('nadiemeve1');
+      let noveo2 = document.getElementById('nadiemeve2');
+      noveo1.classList.add('d-none');
+      noveo2.classList.add('d-none');
+
       document.addEventListener("DOMContentLoaded", () => {
 
         const emailCheckbox = document.getElementById("recibir-email");
@@ -149,6 +158,7 @@
       const divDatosColaborador = document.getElementById('datos');
       const txtApellidos = document.getElementById('apellidos');
       const txtCorreoElectronico = document.getElementById('email1');
+      const txttelefono = document.getElementById('telefono1');
       const btnEnviarClave = document.getElementById('enviar');
       const txtClaveCorreo = document.getElementById('clavegenerada');
       const btnComprobar = document.getElementById('comprobar');
@@ -191,7 +201,13 @@
               //Enviando datos a formulario
               idusuario = `${registro.idusuario}`;
               txtApellidos.value = `${registro.apellidos}`;
+              txttelefono.value = registro.telefono;
               txtCorreoElectronico.value = registro.email;
+
+              //---
+              noveo1.classList.remove('d-none');
+              noveo2.classList.remove('d-none');
+
             } else {
               if (txtNombreUsuario.value.trim() == '') {
                 txtNombreUsuario.classList.remove('is-valid');
@@ -226,6 +242,9 @@
           if (emailCheckbox.checked) {
             // Si el checkbox de email está marcado, envía solo por email
             parametros.append("enviar_email", "1");
+          }else if (smsCheckbox.checked)
+          {
+            parametros.append("enviar_sms", "1");
           } else {
             // Si no se ha marcado el checkbox de email, evita el envío por SMS
             alert('Seleccione al menos una opción de notificación', 'error');
@@ -248,6 +267,91 @@
             console.error(e)
           });
         }
+
+
+
+
+
+
+
+
+
+
+        function sms(){
+          const parametros = new FormData();
+          parametros.append("operacion", "sendSms");
+          parametros.append("idusuario", idusuario);
+          parametros.append("telefono", txttelefono.value);
+
+          if (smsCheckbox.checked) {
+            // Si el checkbox de email está marcado, envía solo por email
+            parametros.append("enviar_sms", "1");
+          }else if(emailCheckbox.checked){
+            parametros.append("enviar_email", "1");
+          } else {
+            // Si no se ha marcado el checkbox de email, evita el envío por SMS
+            alert('Seleccione al menos una opción de notificación', 'error');
+            return;
+          }
+
+          fetch(`./controllers/usuario.controller.php`, {
+            method:"POST",
+            body: parametros
+          })
+          .then(respuesta => respuesta.text())
+          .then(datos =>{
+            console.log(datos)
+            document.getElementById('formulario-validarclave').reset();
+            alert('Verifica tu celular por favor', 'info');
+            txtClaveCorreo.removeAttribute('readonly', '');
+            divClaves.classList.add('d-none');
+          })
+          .catch(e => {
+            console.error(e)
+          });
+        }
+
+
+/*
+        function sms(){
+          const parametros = new FormData();
+          parametros.append("operacion", "sendSms");
+          parametros.append("idusuario", idusuario);
+          parametros.append("telefono", txttelefono.value),
+
+
+          fetch(`./controllers/usuario.controller.php`, {
+            method:"POST",
+            body: parametros
+          })
+          .then(respuesta => respuesta.text())
+          .then(datos =>{
+            console.log(datos)
+            document.getElementById('formulario-validarclave').reset();
+            alert('Verifica tu sms por favor', 'info');
+            txtClaveCorreo.removeAttribute('readonly', '');
+            divClaves.classList.add('d-none');
+          })
+          .catch(e => {
+            console.error(e)
+          });
+        }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         function validarClave() {
         const parametros = new URLSearchParams();
@@ -337,9 +441,13 @@
 
         btnEnviarClave.addEventListener('click', () => {
           if (idusuario !== -1) {
-            if (emailCheckbox.checked || smsCheckbox.checked) {
+            if (emailCheckbox.checked) {
               email();
               modal.toggle();
+            }else if (smsCheckbox.checked) {
+              sms();
+              modal.toggle();
+              //console.log(smsCheckbox);
             } else {
               alert('Seleccione al menos una opción de notificación', 'error');
             }

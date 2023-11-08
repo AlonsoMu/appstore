@@ -1,0 +1,107 @@
+DELIMITER $$
+CREATE PROCEDURE spu_clavegenerada_registrar(
+    IN _idusuario                INT,
+    IN _email                    VARCHAR(50),
+    IN _clavegenerada            CHAR(6)
+)
+BEGIN
+    UPDATE usuarios
+    SET 
+        clavegenerada =  _clavegenerada,
+        estado = '0'
+    WHERE idusuario = _idusuario;
+END $$
+CALL spu_clavegenerada_registrar(1, 'yorghetyauri123@gmail.com', '280703');
+
+
+
+DELIMITER $$
+CREATE PROCEDURE spu_desbloqueosms_registrar(
+	IN _idusuario 				INT,
+    IN _telefono				CHAR(9),
+    IN _clavegenerada 			CHAR(6)
+)
+BEGIN
+	UPDATE usuarios
+    SET
+		clavegenerada = _clavegenerada,
+		estado = '0'
+		WHERE idusuario = _idusuario;
+END $$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function email(){
+          const parametros = new FormData();
+          parametros.append("operacion", "enviarCorreo");
+          parametros.append("idusuario", idusuario);
+          parametros.append("email", txtCorreoElectronico.value);
+
+          if (emailCheckbox.checked) {
+            // Si el checkbox de email está marcado, envía solo por email
+            parametros.append("enviar_email", "1");
+          }else if (smsCheckbox.checked)
+          {
+            parametros.append("enviar_sms", "1");
+          } else {
+            // Si no se ha marcado el checkbox de email, evita el envío por SMS
+            alert('Seleccione al menos una opción de notificación', 'error');
+            return;
+          }
+
+          fetch(`./controllers/usuario.controller.php`, {
+            method:"POST",
+            body: parametros
+          })
+          .then(respuesta => respuesta.text())
+          .then(datos =>{
+            console.log(datos)
+            document.getElementById('formulario-validarclave').reset();
+            alert('Verifica tu correo por favor', 'info');
+            txtClaveCorreo.removeAttribute('readonly', '');
+            divClaves.classList.add('d-none');
+          })
+          .catch(e => {
+            console.error(e)
+          });
+        }
+
+
+
+
+
+
+
+
+nadiemeve
+
+    case 'enviarCorreo':
+      $valorAleatorio = random_int(100000, 999999);
+      $mensaje = "
+      <h1>Recuperación de su cuenta</h1>
+      <hr>
+      <p>Estimado(a), para recuperar el acceso a su cuenta utilice la siguiente contraseña:</p>
+      <h1 style='color:cornflowerblue;font-size:50px;'>{$valorAleatorio}</h1>
+    ";
+
+    $datosEnviar = [
+      'idusuario'     => $_POST['idusuario'],
+      'email'         => $_POST['email'],
+      'clavegenerada' => $valorAleatorio
+    ];
+
+    enviarCorreo($_POST['email'], 'Código de restauración', $mensaje);
+
+    $usuario->registrarDesbloqueo($datosEnviar);
